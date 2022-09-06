@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rejseplan API</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<h1>Din tildvalgte route</h1>
+<table>
+    <tbody id="myTable">
+
+    </tbody>
+</table>
+<script>
+    fetch("http://xmlopen.rejseplanen.dk/bin/rest.exe/trip?originId=8600708&destId=2291&date=06.09.22&time=07:02&useBus=0&format=json").then((data)=>{
+        return data.json();
+    }).then((objectData)=>{
+        buildTable(objectData);
+    })
+
+    function buildTable(objectData){
+        for(var tmp=0;tmp<objectData.TripList.Trip.length;tmp++){
+            var count = Object.keys(objectData.TripList.Trip[tmp].Leg).length;
+            for(var i=0;i<count;i++){
+                    var row=`<tr>
+                        <td>Sted: ${JSON.stringify(objectData.TripList.Trip[tmp].Leg[i].Origin.name)} Tid: ${JSON.stringify(objectData.TripList.Trip[tmp].Leg[i].Origin.time)} Dato: ${JSON.stringify(objectData.TripList.Trip[tmp].Leg[i].Origin.date)}</td>
+                    <td>Sted: ${JSON.stringify(objectData.TripList.Trip[tmp].Leg[i].Destination.name)} Tid: ${JSON.stringify(objectData.TripList.Trip[tmp].Leg[i].Destination.time)} Dato:${JSON.stringify(objectData.TripList.Trip[tmp].Leg[i].Destination.date)}</td>
+                </tr>`
+                var table = $('#myTable');
+                table.append(row);
+                }table.append(`<br>`);
+                }
+        }             
+</script>
+</body>
+</html>
